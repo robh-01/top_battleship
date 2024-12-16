@@ -1,9 +1,12 @@
 //comment this "style.css" import while testing
-import "../style.css";
+// import "../style.css";
 
 class Ship {
   constructor(length) {
-    if (length < 1) throw new Error("length of the ship cannot be less than 1");
+    if (length < 1 || length > 5)
+      throw new Error(
+        "length of the ship cannot be less than 1 or greater than 5",
+      );
     this.length = length;
     this.hitNumber = 0;
   }
@@ -19,4 +22,75 @@ class Ship {
     else return false;
   }
 }
-export { Ship };
+
+class GameBoard {
+  constructor(dimension) {
+    if (!(dimension >= 5 && dimension <= 10))
+      throw new Error(
+        "cannot generate a board whose dimension is not in between 5 and 10 (both inclusive)",
+      );
+    this.dimension = dimension;
+    this.board = Array.from({ length: dimension }, () =>
+      Array(dimension).fill(null),
+    );
+  }
+
+  place(ship, pointToStartPlacing, directionToPlace) {
+    let shipLength = ship.length;
+    const [startX, startY] = pointToStartPlacing;
+
+    if (directionToPlace === "+x") {
+      if (startY + ship.length - 1 > this.dimension)
+        throw new Error("can not place ship out of the board");
+      for (let i = 0; i < shipLength; i++) {
+        this.board[startX][startY + i] = [ship]; //every part will contain with array with one element
+        //referencing to the ship
+      }
+    }
+
+    if (directionToPlace === "-x") {
+      if (startY - ship.length + 1 < 0)
+        throw new Error("can not place ship out of the board");
+      for (let i = 0; i < shipLength; i++) {
+        this.board[startX][startY - i] = [ship];
+      }
+    }
+
+    if (directionToPlace === "+y") {
+      if (startX - ship.length + 1 < 0)
+        throw new Error("can not place ship out of the board");
+      for (let i = 0; i < shipLength; i++) {
+        this.board[startX - i][startY] = [ship];
+      }
+    }
+
+    if (directionToPlace === "-y") {
+      if (startX + ship.length - 1 > this.dimension)
+        throw new Error("can not place ship out of the board");
+      for (let i = 0; i < shipLength; i++) {
+        this.board[startX + i][startY] = [ship];
+      }
+    }
+  }
+
+  receiveAttack(attackCoordinate) {
+    let [attackX, attackY] = attackCoordinate;
+
+    if (this.board[attackX][attackY]) {
+      // if the region was already hit, throw error
+      if (
+        this.board[attackX][attackY] === "X" ||
+        this.board[attackX][attackY] === "O"
+      ) {
+        throw new Error(
+          `region co-ordinates [${attackX}][${attackY}] has already been hit, can't hit a same region twice`,
+        );
+      }
+      this.board[attackX][attackY][0].hit(); //call the hit method on the ship at the area of the attack
+      this.board[attackX][attackY] = "O";
+    } else {
+      this.board[attackX][attackY] = "X";
+    }
+  }
+}
+export { Ship, GameBoard };
