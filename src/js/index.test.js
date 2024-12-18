@@ -175,4 +175,47 @@ describe("GameBoard class works as expected", () => {
       );
     });
   });
+
+  describe("allShipSunk method works as expected", () => {
+    test("return false when all the ships are not sunk", () => {
+      let testBoard = new GameBoard(7);
+      let testShip1 = new Ship(5);
+      let testShip2 = new Ship(3);
+      testBoard.place(testShip1, [0, 0], "+X");
+      testBoard.place(testShip2, [1, 0], "+x");
+      testBoard.receiveAttack([0, 0]);
+      testBoard.receiveAttack([1, 0]);
+      expect(testBoard.allShipSunk()).toBe(false);
+    });
+
+    test("return true when all ship are sunk", () => {
+      let testBoard = new GameBoard(7);
+      let testShip1 = new Ship(5);
+      let testShip2 = new Ship(3);
+      testBoard.place(testShip1, [0, 0], "+X");
+      testBoard.place(testShip2, [1, 0], "+x");
+
+      for (let i = 0; i < 5; i++) {
+        testShip1.hit();
+      }
+      for (let i = 0; i < 3; i++) {
+        testShip2.hit();
+      }
+      expect(testBoard.allShipSunk()).toBe(true);
+    });
+
+    test("return false when some ships are sunk and some are not", () => {
+      let testBoard = new GameBoard(7);
+      let testShip1 = new Ship(5);
+      let testShip2 = new Ship(3);
+      testBoard.place(testShip1, [0, 0], "+X");
+      testBoard.place(testShip2, [1, 0], "+x");
+
+      for (let i = 0; i < 5; i++) {
+        testShip1.hit();
+      }
+
+      expect(testBoard.allShipSunk()).toBe(false);
+    });
+  });
 });

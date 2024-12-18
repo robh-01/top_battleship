@@ -33,6 +33,7 @@ class GameBoard {
     this.board = Array.from({ length: dimension }, () =>
       Array(dimension).fill(null),
     );
+    this.shipList = [];
   }
 
   place(ship, pointToStartPlacing, directionToPlace) {
@@ -71,6 +72,8 @@ class GameBoard {
         this.board[startX + i][startY] = [ship];
       }
     }
+
+    this.shipList.push(ship);
   }
 
   receiveAttack(attackCoordinate) {
@@ -91,6 +94,10 @@ class GameBoard {
     } else {
       this.board[attackX][attackY] = "X";
     }
+  }
+
+  allShipSunk() {
+    return this.shipList.every((ship) => ship.isSunk());
   }
 }
 export { Ship, GameBoard };
