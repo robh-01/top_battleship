@@ -41,8 +41,16 @@ class GameBoard {
     const [startX, startY] = pointToStartPlacing;
 
     if (directionToPlace === "+x") {
+      //if the ship will reach outside the board after placement, throw error
       if (startY + ship.length - 1 > this.dimension)
         throw new Error("can not place ship out of the board");
+
+      //if any region of the board we are trying to place ship contains a ship already throw error
+      for (let i = 0; i < shipLength; i++) {
+        if (this.board[startX][startY + i])
+          throw new Error("trying to place ship in a preoccupied region");
+      }
+      //place the ship
       for (let i = 0; i < shipLength; i++) {
         this.board[startX][startY + i] = [ship]; //every part will contain with array with one element
         //referencing to the ship
@@ -50,24 +58,49 @@ class GameBoard {
     }
 
     if (directionToPlace === "-x") {
+      //if the ship will reach outside the board after placement, throw error
       if (startY - ship.length + 1 < 0)
         throw new Error("can not place ship out of the board");
+
+      //if any region of the board we are trying to place ship contains a ship already throw error
+      for (let i = 0; i < shipLength; i++) {
+        if (this.board[startX][startY - i])
+          throw new Error("trying to place ship in a preoccupied region");
+      }
+
+      //place the ship
       for (let i = 0; i < shipLength; i++) {
         this.board[startX][startY - i] = [ship];
       }
     }
 
     if (directionToPlace === "+y") {
+      //if the ship will reach outside the board after placement, throw error
       if (startX - ship.length + 1 < 0)
         throw new Error("can not place ship out of the board");
+
+      //if any region of the board we are trying to place ship contains a ship already throw error
+      for (let i = 0; i < shipLength; i++) {
+        if (this.board[startX - i][startY])
+          throw new Error("trying to place ship in a preoccupied region");
+      }
+
+      //place the ship
       for (let i = 0; i < shipLength; i++) {
         this.board[startX - i][startY] = [ship];
       }
     }
 
     if (directionToPlace === "-y") {
+      //if the ship will reach outside the board after placement, throw error
       if (startX + ship.length - 1 > this.dimension)
         throw new Error("can not place ship out of the board");
+
+      for (let i = 0; i < shipLength; i++) {
+        if (this.board[startX + i][startY])
+          throw new Error("trying to place ship in a preoccupied region");
+      }
+      //place the ship
       for (let i = 0; i < shipLength; i++) {
         this.board[startX + i][startY] = [ship];
       }

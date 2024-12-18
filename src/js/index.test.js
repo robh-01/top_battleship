@@ -135,6 +135,16 @@ describe("GameBoard class works as expected", () => {
         "can not place ship out of the board",
       );
     });
+    test("throw error when trying to place ship on the region where there is already another ship", () => {
+      let ship1 = new Ship(5);
+      let ship2 = new Ship(4);
+      let testBoard = new GameBoard(7);
+      testBoard.place(ship1, [0, 1], "+x");
+
+      expect(() => testBoard.place(ship2, [0, 1], "+x")).toThrow(
+        "trying to place ship in a preoccupied region",
+      );
+    });
   });
 
   describe("receiveAttack method works as expected", () => {
